@@ -10,16 +10,14 @@ app.use(cors());
 app.listen(PORT, () => console.log(`I AM RUNNING AT ${PORT}`));
 
 app.get("/", (req, res) => {
-  res.json("hii how are you?");
+  res.json("I am localhost server");
 });
 
 app.get("/news", (req, res) => {
-  console.log(req.query);
   let country = req.query.country;
   let category = req.query.category;
   let page = req.query.page;
   let pageSize = req.query.pageSize;
-  console.log(`${country}......${category}.....${page}.....${pageSize}`);
   const options = {
     method: "GET",
     url: "https://newsapi.org/v2/top-headlines",

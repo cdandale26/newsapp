@@ -17,21 +17,23 @@ export class News extends Component {
     pageSize: PropTypes.number,
     category: PropTypes.string,
   };
-  constructor() {
-    super();
+
+  capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUppercase() + string.slice(1);
+  };
+
+  constructor(props) {
+    super(props);
     this.state = {
       articles: [],
       loading: false,
       page: 1,
     };
+    document.title = `News-O-Holic - ${this.props.category}`;
   }
 
-  async componentDidMount() {
-    let url = `http://localhost:8000/news?country=${
-      this.props.country
-    }&category=${this.props.category}&page=${this.state.page + 1}&pageSize=${
-      this.props.pageSize
-    }`;
+  async updateNews() {
+    const url = `http://localhost:8000/news?country=${this.props.country}&category=${this.props.category}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({
       loading: true,
     });
@@ -44,53 +46,29 @@ export class News extends Component {
     });
   }
 
-  handlePrevClick = async () => {
-    let url = `http://localhost:8000/news?country=${
-      this.props.country
-    }&category=${this.props.category}&page=${this.state.page + 1}&pageSize=${
-      this.props.pageSize
-    }`;
+  async componentDidMount() {
+    this.updateNews();
+  }
 
-    this.setState({
-      loading: true,
-    });
-    let data = await fetch(url);
-    let parsedData = await data.json();
+  handlePrevClick = async () => {
     this.setState({
       page: this.state.page - 1,
-      articles: parsedData.articles,
     });
+    this.updateNews();
   };
 
   handleNextClick = async () => {
-    if (
-      this.state.page + 1 >
-      Math.ceil(this.state.totalResults / this.props.pageSize)
-    ) {
-    } else {
-      let url = `http://localhost:8000/news?country=${
-        this.props.country
-      }&category=${this.props.category}&page=${this.state.page + 1}&pageSize=${
-        this.props.pageSize
-      }`;
-      this.setState({
-        loading: true,
-      });
-      let data = await fetch(url);
-      let parsedData = await data.json();
-      this.setState({
-        page: this.state.page + 1,
-        articles: parsedData.articles,
-        loading: false,
-      });
-    }
+    this.setState({
+      page: this.state.page - 1,
+    });
+    this.updateNews();
   };
 
   render() {
     return (
       <div className="container my-3">
         <h2 className="text-center" style={{ margin: "30px 0px" }}>
-          Welcome to News-O-holic
+          {`News-O-holic - Top ${this.props.category} Headlines`}
         </h2>
         {this.state.loading && <Spinner />}
         <div className="row">
