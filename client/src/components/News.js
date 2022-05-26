@@ -59,7 +59,7 @@ export class News extends Component {
 
   handleNextClick = async () => {
     this.setState({
-      page: this.state.page - 1,
+      page: this.state.page + 1,
     });
     this.updateNews();
   };
